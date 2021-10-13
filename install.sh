@@ -98,4 +98,24 @@ popd > /dev/null
 source ~/.bash_profile
 
 info "Installing Python ${PYENV_VERSION}"
-pyenv install "${PYENV_VERSION}"
+pyenv install "${PYENV_VERSION}" --skip-existing
+
+info "Downloading AWS CLI"
+wget -O /tmp/aws.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+pushd /tmp > /dev/null
+unzip -o aws.zip
+rm aws.zip
+
+if command -v aws &> /dev/null
+then
+  info "Upgrading AWS CLI"
+  sudo ./aws/install --update
+else
+  info "Installing AWS CLI"
+  sudo ./aws/install
+fi
+
+rm -rf aws
+popd > /dev/null
+
+info "Done!"
