@@ -2,6 +2,14 @@
 
 My development machine setup.
 
+## Installation
+
+```bash
+git clone https://github.com/cariad/machine.git ~/.machine
+cd ~/.machine
+./install
+```
+
 ## Secrets
 
 ### cariad/machine.secrets
