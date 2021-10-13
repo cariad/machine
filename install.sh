@@ -16,27 +16,28 @@ sudo apt upgrade -y
 info "Minimising system"
 sudo apt autoremove -y
 
+info "Installing home"
+pushd home > /dev/null
+ln -sf "${PWD}/.bash_profile" "${HOME}/.bash_profile"
+ln -sf "${PWD}/.gitconfig"    "${HOME}/.gitconfig"
+popd > /dev/null
+
 if ! command -v git &> /dev/null
 then
   info "Installing Git"
   sudo apt install git -y
 fi
 
-info "Installing .gitconfig"
-ln -sf "${PWD}/.gitconfig" "${HOME}/.gitconfig"
-
 if [ ! -d "${HOME}/.machine.secrets" ]
 then
   # Intentionally use HTTP authentication since we don't have our SSH keys yet:
 
-  echo
   echo "⚠️  Visit https://github.com/settings/tokens/new to create a GitHub"
   echo "⚠️  personal access token. The token can be revoked after"
   echo "⚠️  machine.secrets has been cloned; your cloned SSH key will be used"
   echo "⚠️  for subsequent pulls."
   git clone https://github.com/cariad/machine.secrets.git "${HOME}/.machine.secrets"
 else
-  echo
   info "Updating machine.secrets"
   pushd "${HOME}/.machine.secrets" > /dev/null
   git pull git@github.com:cariad/machine.secrets.git
@@ -55,3 +56,46 @@ then
   sudo apt install /tmp/vs.deb
   rm /tmp/vs.deb
 fi
+
+info "Installing Python build dependencies"
+
+sudo apt install   \
+  make             \
+  build-essential  \
+  libssl-dev       \
+  zlib1g-dev       \
+  libbz2-dev       \
+  libreadline-dev  \
+  libsqlite3-dev   \
+  curl             \
+  llvm             \
+  libncursesw5-dev \
+  xz-utils         \
+  tk-dev           \
+  libxml2-dev      \
+  libxmlsec1-dev   \
+  libffi-dev       \
+  liblzma-dev      \
+  -y
+
+if [ ! -d "${HOME}/.pyenv" ]
+then
+  info "Cloning pyenv"
+  git clone https://github.com/pyenv/pyenv.git "${HOME}/.pyenv"
+else
+  info "Pulling pyenv"
+  pushd "${HOME}/.pyenv" > /dev/null
+  git pull https://github.com/pyenv/pyenv.git
+  popd > /dev/null
+fi
+
+info "Compiling pyenv extension"
+pushd "${HOME}/.pyenv" > /dev/null
+src/configure
+make -C src
+popd > /dev/null
+
+source ~/.bash_profile
+
+info "Installing Python ${PYENV_VERSION}"
+pyenv install "${PYENV_VERSION}"
