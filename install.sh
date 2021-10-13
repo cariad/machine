@@ -16,10 +16,55 @@ sudo apt upgrade -y
 info "Minimising system"
 sudo apt autoremove -y
 
+if ! command -v google-chrome &> /dev/null
+then
+  info "Installing Chrome"
+  wget -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  sudo apt install /tmp/chrome.deb -y
+  rm -rf /tmp/chrome.deb
+fi
+
+if ! command -v code &> /dev/null
+then
+  info "Installing Visual Studio Code"
+  wget -O /tmp/vs.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
+  sudo apt install /tmp/vs.deb -y
+  rm /tmp/vs.deb
+fi
+
+info "Installing Python build dependencies"
+sudo apt install   \
+  make             \
+  build-essential  \
+  libssl-dev       \
+  zlib1g-dev       \
+  libbz2-dev       \
+  libreadline-dev  \
+  libsqlite3-dev   \
+  curl             \
+  llvm             \
+  libncursesw5-dev \
+  xz-utils         \
+  tk-dev           \
+  libxml2-dev      \
+  libxmlsec1-dev   \
+  libffi-dev       \
+  liblzma-dev      \
+  -y
+
+info "Installing ShellCheck"
+sudo apt install shellcheck -y
+
+# Perform all sudos as early as possible so the password is cached ^
+
 info "Installing home"
+
+mkdir -p "${HOME}/freyda"
+
 pushd home > /dev/null
-ln -sf "${PWD}/.bash_profile" "${HOME}/.bash_profile"
-ln -sf "${PWD}/.gitconfig"    "${HOME}/.gitconfig"
+ln -sf "${PWD}/.bash_profile"       "${HOME}/.bash_profile"
+ln -sf "${PWD}/.gitconfig"          "${HOME}/.gitconfig"
+ln -sf "${PWD}/freyda/wev.user.yml" "${HOME}/freyda/wev.user.yml"
 popd > /dev/null
 
 if ! command -v git &> /dev/null
@@ -49,34 +94,7 @@ ln -sf "${HOME}/.machine.secrets/.ssh/config"         "${HOME}/.ssh/config"
 ln -sf "${HOME}/.machine.secrets/.ssh/id_ed25519"     "${HOME}/.ssh/id_ed25519"
 ln -sf "${HOME}/.machine.secrets/.ssh/id_ed25519.pub" "${HOME}/.ssh/id_ed25519.pub"
 
-if ! command -v code &> /dev/null
-then
-  info "Installing Visual Studio Code"
-  wget -O /tmp/vs.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
-  sudo apt install /tmp/vs.deb
-  rm /tmp/vs.deb
-fi
 
-info "Installing Python build dependencies"
-
-sudo apt install   \
-  make             \
-  build-essential  \
-  libssl-dev       \
-  zlib1g-dev       \
-  libbz2-dev       \
-  libreadline-dev  \
-  libsqlite3-dev   \
-  curl             \
-  llvm             \
-  libncursesw5-dev \
-  xz-utils         \
-  tk-dev           \
-  libxml2-dev      \
-  libxmlsec1-dev   \
-  libffi-dev       \
-  liblzma-dev      \
-  -y
 
 if [ ! -d "${HOME}/.pyenv" ]
 then
@@ -117,5 +135,12 @@ fi
 
 rm -rf aws
 popd > /dev/null
+
+info "Installing pipenv"
+pip install --upgrade pipenv
+
+info "Installing wev"
+pip install --upgrade wev
+pip install --upgrade wev-awscodeartifact
 
 info "Done!"

@@ -1,0 +1,4 @@
+CODEARTIFACT_AUTH_TOKEN:
+  plugin:
+    id: wev-awscodeartifact
+    profile: freyda
