@@ -60,6 +60,9 @@ then
   rm /tmp/vs.deb
 fi
 
+# libpq-dev:                Installs pg_config for building psycopg2.
+# ubuntu-restricted-extras: Installs Firefox video codecs.
+
 info "Installing tools"
 sudo apt install           \
   make                     \
@@ -82,6 +85,7 @@ sudo apt install           \
   fonts-firacode           \
   jq                       \
   shellcheck               \
+  libpq-dev                \
   -y
 
 # Perform all sudos as early as possible so the password is cached ^
