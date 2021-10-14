@@ -2,7 +2,20 @@
 
 My development machine setup.
 
+- AWS CLI
+- [cariad/wev](https://github.com/cariad/wev)
+- Fira Code
+- Google Chrome
+- [Obsidian.md](https://obsidian.md)
+- pipenv
+- pyenv
+- Restores SSH keys
+- ShellCheck
+- Visual Studio Code
+
 ## Installation
+
+Install Ubuntu 21.04 desktop, then:
 
 ```bash
 git clone https://github.com/cariad/machine.git ~/.machine

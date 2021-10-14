@@ -16,12 +16,40 @@ sudo apt upgrade -y
 info "Minimising system"
 sudo apt autoremove -y
 
+info "Downloading AWS CLI"
+wget -O /tmp/aws.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+pushd /tmp > /dev/null
+unzip -oq aws.zip
+rm aws.zip
+
+if command -v aws &> /dev/null
+then
+  info "Upgrading AWS CLI"
+  sudo ./aws/install --update
+else
+  info "Installing AWS CLI"
+  sudo ./aws/install
+fi
+
+rm -rf aws
+popd > /dev/null
+
 if ! command -v google-chrome &> /dev/null
 then
   info "Installing Chrome"
   wget -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   sudo apt install /tmp/chrome.deb -y
   rm -rf /tmp/chrome.deb
+  sudo ln -sf /opt/Obsidian/obsidian /usr/local/bin/obsidian
+fi
+
+if ! command -v obsidian &> /dev/null
+then
+  info "Installing Obsidian"
+  obsidian_version=$(curl --silent "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
+  wget -O /tmp/obsidian.deb "https://github.com/obsidianmd/obsidian-releases/releases/download/${obsidian_version}/obsidian_${obsidian_version:1}_amd64.deb"
+  sudo apt install /tmp/obsidian.deb -y
+  rm -rf /tmp/obsidian.deb
 fi
 
 if ! command -v code &> /dev/null
@@ -32,28 +60,29 @@ then
   rm /tmp/vs.deb
 fi
 
-info "Installing Python build dependencies"
-sudo apt install   \
-  make             \
-  build-essential  \
-  libssl-dev       \
-  zlib1g-dev       \
-  libbz2-dev       \
-  libreadline-dev  \
-  libsqlite3-dev   \
-  curl             \
-  llvm             \
-  libncursesw5-dev \
-  xz-utils         \
-  tk-dev           \
-  libxml2-dev      \
-  libxmlsec1-dev   \
-  libffi-dev       \
-  liblzma-dev      \
+info "Installing tools"
+sudo apt install           \
+  make                     \
+  build-essential          \
+  libssl-dev               \
+  zlib1g-dev               \
+  libbz2-dev               \
+  libreadline-dev          \
+  libsqlite3-dev           \
+  curl                     \
+  llvm                     \
+  libncursesw5-dev         \
+  xz-utils                 \
+  tk-dev                   \
+  libxml2-dev              \
+  libxmlsec1-dev           \
+  libffi-dev               \
+  liblzma-dev              \
+  ubuntu-restricted-extras \
+  fonts-firacode           \
+  jq                       \
+  shellcheck               \
   -y
-
-info "Installing ShellCheck"
-sudo apt install shellcheck -y
 
 # Perform all sudos as early as possible so the password is cached ^
 
@@ -94,8 +123,6 @@ ln -sf "${HOME}/.machine.secrets/.ssh/config"         "${HOME}/.ssh/config"
 ln -sf "${HOME}/.machine.secrets/.ssh/id_ed25519"     "${HOME}/.ssh/id_ed25519"
 ln -sf "${HOME}/.machine.secrets/.ssh/id_ed25519.pub" "${HOME}/.ssh/id_ed25519.pub"
 
-
-
 if [ ! -d "${HOME}/.pyenv" ]
 then
   info "Cloning pyenv"
@@ -117,24 +144,6 @@ source ~/.bash_profile
 
 info "Installing Python ${PYENV_VERSION}"
 pyenv install "${PYENV_VERSION}" --skip-existing
-
-info "Downloading AWS CLI"
-wget -O /tmp/aws.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-pushd /tmp > /dev/null
-unzip -o aws.zip
-rm aws.zip
-
-if command -v aws &> /dev/null
-then
-  info "Upgrading AWS CLI"
-  sudo ./aws/install --update
-else
-  info "Installing AWS CLI"
-  sudo ./aws/install
-fi
-
-rm -rf aws
-popd > /dev/null
 
 info "Installing pipenv"
 pip install --upgrade pipenv
