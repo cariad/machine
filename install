@@ -118,7 +118,7 @@ else
   popd > /dev/null
 fi
 
-info "Installing .ssh"
+info "Restoring SSH keys"
 ln -sf "${HOME}/.machine.secrets/.ssh/config"         "${HOME}/.ssh/config"
 ln -sf "${HOME}/.machine.secrets/.ssh/id_ed25519"     "${HOME}/.ssh/id_ed25519"
 ln -sf "${HOME}/.machine.secrets/.ssh/id_ed25519.pub" "${HOME}/.ssh/id_ed25519.pub"
@@ -151,5 +151,9 @@ pip install --upgrade pipenv
 info "Installing wev"
 pip install --upgrade wev
 pip install --upgrade wev-awscodeartifact
+
+info "Restoring GnuPG keys"
+gpg --import              ~/.machine.secrets/.gnupg/secret.txt
+gpg --import-ownertrust < ~/.machine.secrets/.gnupg/trust.txt
 
 info "Done!"

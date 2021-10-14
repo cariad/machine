@@ -9,7 +9,7 @@ My development machine setup.
 - [Obsidian.md](https://obsidian.md)
 - pipenv
 - pyenv
-- Restores SSH keys
+- Restores GnuPG and SSH keys
 - ShellCheck
 - Visual Studio Code
 
@@ -29,6 +29,7 @@ cd ~/.machine
 
 The private repository [cariad/machine.secrets](https://github.com/cariad/machine.secrets) holds my secrets.
 
+- `.gnupg/`: GnuPG keys and config
 - `.ssh/`: SSH keys and config
 
 ## Disaster plan
@@ -64,7 +65,16 @@ On learning that my secrets have been compromised, my disaster plan is to use th
     chmod 600 ~/.machine.secrets/.ssh/config
     ```
 
+1. Generate a GPG key pair:
+
+    ```bash
+    gpg --full-generate-key
+    mkdir                    ~/.machine.secrets/.gnupg
+    gpg --armor --export-secret-keys CA16AC469186897C45F01CE4DA7AEE5BEE67D0F0 > ~/.machine.secrets/.gnupg/secret.txt
+    gpg --export-ownertrust                                                   > ~/.machine.secrets/.gnupg/trust.txt
+    ```
+
 1. Push `~/.machine.secrets` to a safe remote.
-1. Share your public key to authenticate:
+1. Share your public keys to authenticate:
     - [github.com keys](https://github.com/settings/keys)
     - [gitlab.com keys](https://gitlab.com/-/profile/keys)

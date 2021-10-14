@@ -1,5 +1,12 @@
+[commit]
+	gpgsign = true
+[init]
+	defaultBranch = main
 [pull]
 	rebase = false
+[tag]
+	gpgsign = true
 [user]
 	email = cariad@cariad.earth
 	name = Cariad Eccleston
+	signingkey = CA16AC469186897C45F01CE4DA7AEE5BEE67D0F0
