@@ -89,6 +89,10 @@ sudo apt install           \
   python3-distutils        \
   -y
 
+info "Installing Node.js"
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
 # Perform all sudos as early as possible so the password is cached ^
 
 info "Installing home"

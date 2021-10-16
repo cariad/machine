@@ -6,6 +6,7 @@ My development machine setup.
 - [cariad/wev](https://github.com/cariad/wev)
 - Fira Code
 - Google Chrome
+- Node.js
 - [Obsidian.md](https://obsidian.md)
 - pipenv
 - pyenv
