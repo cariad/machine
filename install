@@ -75,8 +75,10 @@ fi
 if ! command -v obsidian &> /dev/null
 then
   info "Installing Obsidian"
-  obsidian_version=$(curl --silent "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
-  wget -O /tmp/obsidian.deb "https://github.com/obsidianmd/obsidian-releases/releases/download/${obsidian_version}/obsidian_${obsidian_version:1}_amd64.deb"
+  # The Obsidian team don't generate .deb installers for every release. They ask
+  # you to install the latest .deb then upgrade in-app. At the time of writing,
+  # this is the latest .deb.
+  wget -O /tmp/obsidian.deb "https://github.com/obsidianmd/obsidian-releases/releases/download/v0.12.15/obsidian_0.12.15_amd64.deb"
   sudo apt install /tmp/obsidian.deb -y
   rm -rf /tmp/obsidian.deb
 fi
