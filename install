@@ -16,6 +16,35 @@ sudo apt upgrade -y
 info "Minimising system"
 sudo apt autoremove -y
 
+# libpq-dev:                Installs pg_config for building psycopg2.
+# ubuntu-restricted-extras: Installs Firefox video codecs.
+
+info "Installing tools"
+sudo apt install           \
+  make                     \
+  build-essential          \
+  libssl-dev               \
+  zlib1g-dev               \
+  libbz2-dev               \
+  libreadline-dev          \
+  libsqlite3-dev           \
+  curl                     \
+  llvm                     \
+  libncursesw5-dev         \
+  xz-utils                 \
+  tk-dev                   \
+  libxml2-dev              \
+  libxmlsec1-dev           \
+  libffi-dev               \
+  liblzma-dev              \
+  ubuntu-restricted-extras \
+  fonts-firacode           \
+  jq                       \
+  shellcheck               \
+  libpq-dev                \
+  python3-distutils        \
+  -y
+
 info "Downloading AWS CLI"
 wget -O /tmp/aws.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
 pushd /tmp > /dev/null
@@ -59,35 +88,6 @@ then
   sudo apt install /tmp/vs.deb -y
   rm /tmp/vs.deb
 fi
-
-# libpq-dev:                Installs pg_config for building psycopg2.
-# ubuntu-restricted-extras: Installs Firefox video codecs.
-
-info "Installing tools"
-sudo apt install           \
-  make                     \
-  build-essential          \
-  libssl-dev               \
-  zlib1g-dev               \
-  libbz2-dev               \
-  libreadline-dev          \
-  libsqlite3-dev           \
-  curl                     \
-  llvm                     \
-  libncursesw5-dev         \
-  xz-utils                 \
-  tk-dev                   \
-  libxml2-dev              \
-  libxmlsec1-dev           \
-  libffi-dev               \
-  liblzma-dev              \
-  ubuntu-restricted-extras \
-  fonts-firacode           \
-  jq                       \
-  shellcheck               \
-  libpq-dev                \
-  python3-distutils        \
-  -y
 
 info "Installing Node.js"
 curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
